@@ -1,0 +1,13 @@
+{
+  "sessionId": "1779034046135",
+  "createdAt": "2026-05-17T16:07:26.135Z",
+  "currentTask": {
+    "type": "lookup",
+    "action": "lookupAccount",
+    "accountId": "testcompany",
+    "priority": "high"
+  },
+  "context": {},
+  "recentPreferences": [],
+  "lastActivity": "2026-05-17T16:07:26.135Z"
+}
