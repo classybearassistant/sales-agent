@@ -92,9 +92,10 @@ async function findContacts(accountId, domain) {
 // Detect buying signals
 async function detectSignals(accountId, companyName) {
   const signals = []
+  const name = companyName.replace(/_/g, ' ')
   
   // Funding events
-  const fundingSearch = await webSearch.search(`${companyName} funding raised`)
+  const fundingSearch = await webSearch.search(`${name} funding raised`)
   if (fundingSearch.funding) {
     signals.push({
       type: 'funding',
@@ -104,21 +105,32 @@ async function detectSignals(accountId, companyName) {
   }
   
   // Hiring spree (growth signal)
-  const hiringSearch = await webSearch.search(`${companyName} hiring growth`)
-  if (hiringSearch.hiringGrowth) {
+  const hiringSearch = await webSearch.search(`${name} hiring 2024 2025`)
+  if (hiringSearch.hiringGrowth || hiringSearch.jobCount > 5) {
     signals.push({
       type: 'hiring',
-      detail: 'Growth hiring detected',
+      detail: hiringSearch.jobCount ? `${hiringSearch.jobCount} new jobs` : 'Active hiring detected',
       count: hiringSearch.jobCount
     })
   }
   
-  // Executive changes
-  const execSearch = await webSearch.search(`${companyName} new hire executive`)
+  // Executive changes - search more broadly
+  const execSearch = await webSearch.search(`${name} new CEO CFO CTO 2024 2025`)
   if (execSearch.newExecutive) {
     signals.push({
       type: 'executive_change',
       detail: execSearch.newExecutive
+    })
+  }
+  
+  // News about company
+  const newsSearch = await webSearch.search(`${name} news today`)
+  if (newsSearch.snippets && newsSearch.snippets.length > 0) {
+    const topNews = newsSearch.snippets[0]
+    signals.push({
+      type: 'news',
+      detail: topNews.title,
+      snippet: topNews.snippet.substring(0, 100)
     })
   }
   

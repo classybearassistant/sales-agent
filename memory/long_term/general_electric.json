@@ -1,0 +1,37 @@
+{
+  "accountId": "general_electric",
+  "createdAt": "2026-05-17T16:09:10.431Z",
+  "updatedAt": "2026-05-17T16:17:20.179Z",
+  "name": "general_electric",
+  "domain": null,
+  "contacts": [],
+  "research": [],
+  "notes": [],
+  "emails": [],
+  "tags": [],
+  "size": null,
+  "industry": null,
+  "techStack": [],
+  "funding": null,
+  "signals": [
+    {
+      "type": "funding",
+      "detail": "$6.5 billion",
+      "date": "Aug 13, 2025"
+    },
+    {
+      "type": "executive_change",
+      "detail": {
+        "role": "CEO 2025 Pay Revealed",
+        "name": "GENERAL ELECTRIC CO ($GE) CEO 2025 Pay Revealed"
+      }
+    },
+    {
+      "type": "news",
+      "detail": "Home | GE News",
+      "snippet": "GE Aerospace Launches as Independent, Investment-Grade Public Company Following Completion of GE Ver"
+    }
+  ],
+  "sources": [],
+  "researchedAt": "2026-05-17T16:17:14.985Z"
+}
