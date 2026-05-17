@@ -1,10 +1,91 @@
 {
   "accountId": "general_electric",
-  "createdAt": "2026-05-17T16:09:10.431Z",
-  "updatedAt": "2026-05-17T16:17:20.179Z",
+  "createdAt": "2026-05-17T16:27:17.683Z",
+  "updatedAt": "2026-05-17T16:27:35.579Z",
   "name": "general_electric",
   "domain": null,
-  "contacts": [],
+  "contacts": [
+    {
+      "id": "1779035252982",
+      "addedAt": "2026-05-17T16:27:32.982Z",
+      "name": "Mohamed Ali",
+      "title": "President",
+      "source": "https://www.geaerospace.com/company/about-us/leadership",
+      "email": null
+    },
+    {
+      "id": "1779035252983",
+      "addedAt": "2026-05-17T16:27:32.983Z",
+      "name": "Commercial Engines",
+      "title": "Chief",
+      "source": "https://www.geaerospace.com/company/about-us/leadership",
+      "email": null
+    },
+    {
+      "id": "1779035252983",
+      "addedAt": "2026-05-17T16:27:32.983Z",
+      "name": "Lawrence Culp",
+      "title": "CEO",
+      "source": "https://www.geaerospace.com/company/about-us/leadership",
+      "email": null
+    },
+    {
+      "id": "1779035252984",
+      "addedAt": "2026-05-17T16:27:32.984Z",
+      "name": "global technology",
+      "title": "CEO",
+      "source": "https://www.comparably.com/companies/general-electric/executive-team",
+      "email": null
+    },
+    {
+      "id": "1779035252984",
+      "addedAt": "2026-05-17T16:27:32.984Z",
+      "name": "CEO of",
+      "title": "CEO",
+      "source": "https://www.gehealthcare.com/en-us/about/leadership?srsltid=AfmBOooq4wQN-AUnlxdSzDjwy9yiDHPq8Ou7dVKvwfyhTbwU8j6LLJW0",
+      "email": null
+    },
+    {
+      "id": "1779035252985",
+      "addedAt": "2026-05-17T16:27:32.985Z",
+      "name": "Vic Abate",
+      "title": "Executive",
+      "source": "https://www.gevernova.com/company/leadership",
+      "email": null
+    },
+    {
+      "id": "1779035252985",
+      "addedAt": "2026-05-17T16:27:32.985Z",
+      "name": "Steven Baert",
+      "title": "Executive",
+      "source": "https://www.gevernova.com/company/leadership",
+      "email": null
+    },
+    {
+      "id": "1779035252988",
+      "addedAt": "2026-05-17T16:27:32.988Z",
+      "name": "Kristin Carvell",
+      "title": "Executive",
+      "source": "https://www.gevernova.com/company/leadership",
+      "email": null
+    },
+    {
+      "id": "1779035252988",
+      "addedAt": "2026-05-17T16:27:32.988Z",
+      "name": "Roger Martella",
+      "title": "Executive",
+      "source": "https://www.gevernova.com/company/leadership",
+      "email": null
+    },
+    {
+      "id": "1779035252989",
+      "addedAt": "2026-05-17T16:27:32.989Z",
+      "name": "Scott Strazik",
+      "title": "CEO",
+      "source": "https://www.ge.com/news/reports/meet-the-ge-ceos",
+      "email": null
+    }
+  ],
   "research": [],
   "notes": [],
   "emails": [],
@@ -33,5 +114,5 @@
     }
   ],
   "sources": [],
-  "researchedAt": "2026-05-17T16:17:14.985Z"
+  "researchedAt": "2026-05-17T16:27:30.958Z"
 }

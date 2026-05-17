@@ -2,12 +2,12 @@
   "sessionId": "1779034046135",
   "createdAt": "2026-05-17T16:07:26.135Z",
   "currentTask": {
-    "type": "research",
-    "action": "research",
+    "type": "research_email",
+    "action": "researchAndEmail",
     "accountId": "general_electric",
-    "priority": "normal"
+    "priority": "high"
   },
   "context": {},
   "recentPreferences": [],
-  "lastActivity": "2026-05-17T16:17:14.977Z"
+  "lastActivity": "2026-05-17T16:27:15.660Z"
 }

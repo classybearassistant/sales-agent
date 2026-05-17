@@ -44,8 +44,22 @@ class SalesAgent {
     const lower = command.toLowerCase()
     const tasks = []
     
+    // Research + Email command (research and send email to contacts)
+    if ((lower.includes('research') && lower.includes('email')) || 
+        (lower.includes('prospect') && lower.includes('email')) ||
+        lower.includes('research and email') ||
+        lower.includes('research then email') ||
+        lower.includes('email contacts')) {
+      const accountId = this.extractAccountId(command.replace(/and email|then email|email the contacts|prospect and email/gi, ''))
+      tasks.push({
+        type: 'research_email',
+        action: 'researchAndEmail',
+        accountId,
+        priority: 'high'
+      })
+    }
     // Research command
-    if (lower.includes('research') || lower.includes('find info on') || lower.includes('look up')) {
+    else if (lower.includes('research') || lower.includes('find info on') || lower.includes('look up')) {
       const accountId = this.extractAccountId(command)
       tasks.push({
         type: 'research',
@@ -56,7 +70,7 @@ class SalesAgent {
     }
     
     // Prospect outreach command
-    if (lower.includes('prospect') || lower.includes('reach out') || lower.includes('send email')) {
+    else if (lower.includes('prospect') || lower.includes('reach out') || lower.includes('send email')) {
       const accountId = this.extractAccountId(command)
       tasks.push({
         type: 'outbound',
@@ -115,16 +129,14 @@ class SalesAgent {
   
   // Extract account/company name from command
   extractAccountId(command) {
-    // Remove common phrases to get company name
     let account = command
-      .replace(/research|find|look up|check|what do you know about|info on/gi, '')
-      .replace(/for|about|with/gi, ' ')
+      .replace(/research|prospect|find|look up|check|what do you know about|info on|and email|then email|email the contacts|prospect and email|and prospect/gi, '')
+      .replace(/for|about|with|to|from/gi, ' ')
+      .replace(/the contacts|contacts/gi, '')
       .trim()
     
-    // Clean up
     account = account.replace(/[^a-zA-Z0-9\s]/g, '').trim()
     
-    // Simple slug for now
     return account.toLowerCase().replace(/\s+/g, '_')
   }
   
@@ -159,6 +171,9 @@ class SalesAgent {
       case 'research':
         return await research.research(task.accountId)
         
+      case 'researchAndEmail':
+        return await this.researchAndEmail(task.accountId)
+        
       case 'runOutbound':
         return await sdr.runOutbound(task.accountId, {
           senderEmail: this.senderEmail,
@@ -177,6 +192,110 @@ class SalesAgent {
         
       default:
         throw new Error(`Unknown action: ${task.action}`)
+    }
+  }
+  
+  // Research account AND send emails to found contacts
+  async researchAndEmail(accountId) {
+    console.log(`[Agent] Running research + email for ${accountId}`)
+    
+    // Step 1: Research
+    const researchResult = await research.research(accountId)
+    
+    // Step 2: Check if we have contacts
+    const account = memory.longTerm.loadAccount(accountId)
+    const contacts = account.contacts || []
+    
+    if (contacts.length === 0) {
+      return {
+        accountId,
+        researched: true,
+        contactsFound: 0,
+        emailsSent: 0,
+        message: 'Researched but no contacts found. Need more signals or contact enrichment.'
+      }
+    }
+    
+    // Step 3: Compose and queue emails (don't actually send without email config)
+    const emails = []
+    for (const contact of contacts) {
+      if (contact.email) {
+        emails.push({
+          to: contact.email,
+          toName: contact.name,
+          toTitle: contact.title,
+          subject: this.personalizeSubject(account.name, account.signals),
+          body: this.personalizeEmail(contact.name, account.name, account.signals)
+        })
+      }
+    }
+    
+    // Step 4: Return what we would send (email integration requires SMTP creds)
+    return {
+      accountId,
+      accountName: account.name,
+      researched: true,
+      contactsFound: contacts.length,
+      contacts: contacts.map(c => ({ name: c.name, title: c.title, hasEmail: !!c.email })),
+      emailsQueued: emails.length,
+      emails: emails,
+      nextSteps: emails.length > 0 
+        ? 'Emails ready to send. Configure SMTP credentials to activate.'
+        : 'No email addresses found. Add email enrichment to enable outreach.'
+    }
+  }
+  
+  // Personalize subject line based on signals
+  personalizeSubject(companyName, signals) {
+    if (!signals || signals.length === 0) {
+      return `Quick question, ${companyName}`
+    }
+    
+    const topSignal = signals[0]
+    switch (topSignal.type) {
+      case 'funding':
+        return `Congratulations on the ${topSignal.detail}, ${companyName}`
+      case 'executive_change':
+        return `New leadership at ${companyName}`
+      case 'hiring':
+        return `Growing fast, ${companyName}`
+      case 'news':
+        return `${companyName} in the news`
+      default:
+        return `Quick question, ${companyName}`
+    }
+  }
+  
+  // Personalize email body based on company and signals
+  personalizeEmail(firstName, companyName, signals) {
+    const signalText = signals && signals.length > 0 
+      ? this.getSignalContext(signals[0])
+      : 'your growth trajectory'
+    
+    return `Hi ${firstName},
+
+I noticed ${companyName} is doing interesting work in ${signalText}. We help revenue teams like yours move faster and close more deals.
+
+Would you be open to a quick conversation this week?
+
+Best,
+${this.senderName}`
+  }
+  
+  getSignalContext(signal) {
+    if (!signal) return 'your growth trajectory'
+    
+    switch (signal.type) {
+      case 'funding':
+        return `recently raised ${signal.detail}`
+      case 'executive_change':
+        return typeof signal.detail === 'object' ? `leadership changes with ${signal.detail.name}` : signal.detail
+      case 'hiring':
+        return `adding ${signal.count || 'many'} new team members`
+      case 'news':
+        return 'recent developments'
+      default:
+        return 'your growth trajectory'
     }
   }
   
